@@ -13,3 +13,10 @@ class MinSparseTable:
             for i in range(0, rango):
                 off = i + 2 ** (j - 1)
                 self.mat[j][i] = min(self.mat[j - 1][i], self.mat[j - 1][off])
+
+    def min(self, left, right):
+        size = right - left + 1
+        y = int(log2(size))
+        op1 = self.mat[y][left]
+        op2 = self.mat[y][right - 2**y + 1]
+        return min(op1, op2)
