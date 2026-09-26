@@ -83,20 +83,30 @@ class Escena2_Construccion(Scene):
             for i in range(rango):
                 off = i + half
 
-                covered = VGroup(*[arr_cells[k][0] for k in range(i, i + block_size)])
-                brace = Brace(covered, direction=DOWN, buff=0.1, color=ORANGE)
-                brace_lbl = Text(f"2{_sup(j)} = {block_size}", font_size=SMALL_FONT, color=ORANGE)
-                brace_lbl.next_to(brace, DOWN, buff=0.06)
-                brace_grp = VGroup(brace, brace_lbl)
+                # construccion de llaves separadas para mostrar las mitades que componen j
+                cov1 = VGroup(*[arr_cells[k][0] for k in range(i, i + half)])
+                brace1 = Brace(cov1, direction=DOWN, buff=0.1, color=BLUE_C)
+                lbl1 = Text(f"2{_sup(j-1)}", font_size=SMALL_FONT, color=BLUE_C).next_to(brace1, DOWN, buff=0.06)
+
+                cov2 = VGroup(*[arr_cells[k][0] for k in range(off, off + half)])
+                brace2 = Brace(cov2, direction=DOWN, buff=0.1, color=RED_C)
+                lbl2 = Text(f"2{_sup(j-1)}", font_size=SMALL_FONT, color=RED_C).next_to(brace2, DOWN, buff=0.06)
+
+                brace_grp = VGroup(brace1, lbl1, brace2, lbl2)
 
                 src1_sq = mob_mat[j - 1][i][0]
                 src2_sq = mob_mat[j - 1][off][0]
 
-                # animacion (resaltar celdas previas y llave)
+                # animacion (resaltar celdas previas y llaves divididas)
+                high_arr1 = [arr_cells[k][0].animate.set_fill(BLUE, opacity=0.3) for k in range(i, i + half)]
+                high_arr2 = [arr_cells[k][0].animate.set_fill(RED, opacity=0.3) for k in range(off, off + half)]
+                
                 self.play(
                     FadeIn(brace_grp),
                     src1_sq.animate.set_fill(BLUE, opacity=0.35),
                     src2_sq.animate.set_fill(RED, opacity=0.35),
+                    *high_arr1,
+                    *high_arr2,
                     run_time=0.4,
                 )
 
@@ -109,9 +119,14 @@ class Escena2_Construccion(Scene):
                 mob_mat[j][i] = VGroup(mob_mat[j][i][0], new_txt)
 
                 # animacion (quitar resaltado)
+                unhigh_arr1 = [arr_cells[k][0].animate.set_fill(BLUE, opacity=0) for k in range(i, i + half)]
+                unhigh_arr2 = [arr_cells[k][0].animate.set_fill(RED, opacity=0) for k in range(off, off + half)]
+                
                 self.play(
                     src1_sq.animate.set_fill(BLUE, opacity=0),
                     src2_sq.animate.set_fill(RED, opacity=0),
+                    *unhigh_arr1,
+                    *unhigh_arr2,
                     FadeOut(brace_grp),
                     run_time=0.3,
                 )
