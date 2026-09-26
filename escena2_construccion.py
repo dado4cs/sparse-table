@@ -83,16 +83,12 @@ class Escena2_Construccion(Scene):
             for i in range(rango):
                 off = i + half
 
-                # construccion de llaves separadas para mostrar las mitades que componen j
-                cov1 = VGroup(*[arr_cells[k][0] for k in range(i, i + half)])
-                brace1 = Brace(cov1, direction=DOWN, buff=0.1, color=BLUE_C)
-                lbl1 = Text(f"2{_sup(j-1)}", font_size=SMALL_FONT, color=BLUE_C).next_to(brace1, DOWN, buff=0.06)
-
-                cov2 = VGroup(*[arr_cells[k][0] for k in range(off, off + half)])
-                brace2 = Brace(cov2, direction=DOWN, buff=0.1, color=RED_C)
-                lbl2 = Text(f"2{_sup(j-1)}", font_size=SMALL_FONT, color=RED_C).next_to(brace2, DOWN, buff=0.06)
-
-                brace_grp = VGroup(brace1, lbl1, brace2, lbl2)
+                # construccion de la llave completa para el bloque j
+                covered = VGroup(*[arr_cells[k][0] for k in range(i, i + block_size)])
+                brace = Brace(covered, direction=DOWN, buff=0.1, color=ORANGE)
+                brace_lbl = Text(f"2{_sup(j)} = {block_size}", font_size=SMALL_FONT, color=ORANGE)
+                brace_lbl.next_to(brace, DOWN, buff=0.06)
+                brace_grp = VGroup(brace, brace_lbl)
 
                 src1_sq = mob_mat[j - 1][i][0]
                 src2_sq = mob_mat[j - 1][off][0]
